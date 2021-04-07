@@ -12,8 +12,8 @@ ThemeData lightThemeData(BuildContext context) {
     scaffoldBackgroundColor: Colors.white,
     appBarTheme: appBarTheme,
     iconTheme: IconThemeData(color: kContentColorLightTheme),
-    textTheme: GoogleFonts.latoTextTheme(Theme.of(context).textTheme)
-        .apply(bodyColor: kContentColorLightTheme),
+    textTheme: GoogleFonts.montserratTextTheme(Theme.of(context).textTheme)
+        .apply(bodyColor: kContentColorLightTheme, displayColor: kContentColorLightTheme),
     colorScheme: ColorScheme.light(
       primary: kPrimaryColor,
       secondary: kSecondaryColor,
@@ -37,8 +37,8 @@ ThemeData darkThemeData(BuildContext context) {
     scaffoldBackgroundColor: kContentColorLightTheme,
     appBarTheme: appBarTheme,
     iconTheme: IconThemeData(color: kContentColorDarkTheme),
-    textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme)
-        .apply(bodyColor: kContentColorDarkTheme),
+    textTheme: GoogleFonts.montserratTextTheme(Theme.of(context).textTheme)
+        .apply(bodyColor: kContentColorDarkTheme, displayColor: kContentColorDarkTheme),
     colorScheme: ColorScheme.dark().copyWith(
       primary: kPrimaryColor,
       secondary: kSecondaryColor,
