@@ -1,4 +1,5 @@
 import 'package:chatin/profileIcon.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:chatin/constants.dart';
 
@@ -9,6 +10,8 @@ class MessageScreen extends StatelessWidget {
   final String chatroom_name;
 
   const MessageScreen({Key key, this.chatroom_id, this.chatroom_name}) : super(key: key);
+
+  //final chatRef = FirebaseFirestore.instance.collection(collectionPath)
 
   @override
   Widget build(BuildContext context) {

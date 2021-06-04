@@ -3,7 +3,7 @@ import 'package:chatin/profileIcon.dart';
 import 'package:flutter/material.dart';
 
 final List<Map> chatRooms =
-    List.generate(100, (index) => {"id": index, "name": "Chatroom #${index + 1}"}).toList();
+    List.generate(4, (index) => {"id": index, "name": "Chatroom #${index + 1}"}).toList();
 
 class HomePage extends StatelessWidget {
   @override
@@ -34,6 +34,7 @@ class ChatroomList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("chatroomlist");
     return Expanded(
       child: SizedBox(
         child: GridView.builder(

@@ -1,4 +1,4 @@
-package com.example.chatin
+package com.yigitsezer.chatin
 
 import io.flutter.embedding.android.FlutterActivity
 
