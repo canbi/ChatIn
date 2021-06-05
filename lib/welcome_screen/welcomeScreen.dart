@@ -1,4 +1,4 @@
-import 'package:chatin/signin_page/siginScreen.dart';
+import 'package:chatin/signin_page/signinScreen.dart';
 import 'package:flutter/material.dart';
 import '../constants.dart';
 

@@ -1,5 +1,9 @@
+import 'dart:ui';
+
 import 'package:chatin/messages/messageScreen.dart';
-import 'package:chatin/profileIcon.dart';
+import 'package:chatin/icons.dart';
+import 'package:chatin/profile_page/profilePage.dart';
+import 'package:chatin/settings_page/settingsPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +20,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isPublic;
-
+  final _textFieldController = TextEditingController();
+  String newChatroomName;
   @override
   void initState() {
     super.initState();
@@ -26,8 +31,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      // TODO
-      onWillPop: () async => true,
+      onWillPop: () async => false,
       child: Scaffold(
         body: SafeArea(
           child: Container(
@@ -37,7 +41,7 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       'Start ChatIn',
@@ -47,13 +51,14 @@ class _HomePageState extends State<HomePage> {
                           .headline3
                           .copyWith(fontWeight: FontWeight.bold),
                     ),
+                    Spacer(flex: 2),
                     MaterialButton(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(40)),
                       ),
-                      padding: EdgeInsets.all(20),
+                      //padding: EdgeInsets.all(20),
                       color: Colors.lightGreen,
-                      minWidth: MediaQuery.of(context).size.width / 3,
+                      minWidth: MediaQuery.of(context).size.width / 4,
                       onPressed: () {
                         setState(() {
                           isPublic = !isPublic;
@@ -64,18 +69,33 @@ class _HomePageState extends State<HomePage> {
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    ProfileIcon(onPressed: () {})
+                    Spacer(flex: 2),
+                    ProfileIcon(
+                      character: widget.nickname[0],
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ProfilePage()),
+                      ),
+                    ),
+                    //SizedBox(width: 10),
+                    Spacer(flex: 1),
+                    SettingsIcon(
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SettingsPage()),
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: 40),
                 FutureBuilder<List<dynamic>>(
                   future: ChatinFirebaseService().getAllChatIds(),
                   builder: (context, snapshot) {
-                    if (snapshot.hasData && snapshot.data.length != 0) {
+                    if (snapshot.hasData) {
                       return Expanded(
                         child: SizedBox(
                           child: GridView.builder(
-                            itemCount: snapshot.data.length,
+                            itemCount: snapshot.data.length + 1,
                             gridDelegate:
                                 SliverGridDelegateWithMaxCrossAxisExtent(
                               maxCrossAxisExtent: 150,
@@ -83,41 +103,34 @@ class _HomePageState extends State<HomePage> {
                               crossAxisSpacing: 20,
                             ),
                             itemBuilder: (BuildContext ctx, index) {
-                              return Container(
-                                alignment: Alignment.center,
-                                child: Column(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => MessageScreen(
-                                            chatroom_name: //snapshot
-                                                "${snapshot.data[index]}",
-                                          ),
-                                        ),
+                              if (index == 0) {
+                                return ChatroomCircle(
+                                  chatroomChar: "+",
+                                  chatroomName: "Create Chatroom Boi",
+                                  onPressed: () =>
+                                      _displayTextInputDialog(context),
+                                );
+                              } else {
+                                return ChatroomCircle(
+                                  chatroomChar:
+                                      "${snapshot.data[index - 1][0].toUpperCase()}",
+                                  chatroomName: "${snapshot.data[index - 1]}",
+                                  onPressed: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MessageScreen(
+                                        nickname: widget.nickname,
+                                        chatroom_name: //snapshot
+                                            "${snapshot.data[index - 1]}",
                                       ),
-                                      child: CircleAvatar(
-                                          backgroundColor: Colors.redAccent,
-                                          minRadius: 42),
                                     ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      "${snapshot.data[index]}",
-                                      style:
-                                          Theme.of(context).textTheme.bodyText2,
-                                    ),
-                                  ],
-                                ),
-                              );
+                                  ),
+                                );
+                              }
                             },
                           ),
                         ),
                       );
-
-                      /*itemBuilder: (context, index) {
-                            return Text("${snapshot.data[index].season_name}");
-                          });*/
                     } else if (snapshot.hasError) {
                       return Text("Error");
                     }
@@ -128,6 +141,86 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Future<void> _displayTextInputDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Creating a Chatroom'),
+          content: TextField(
+            onSubmitted: (value) {
+              ChatinFirebaseService()
+                  .createChatroom(widget.nickname, value)
+                  .then((value) => setState(() {
+                        newChatroomName = value;
+                      }))
+                  .then((value) => Navigator.pop(context))
+                  .then(
+                    (value) => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MessageScreen(
+                            nickname: widget.nickname,
+                            chatroom_name: "$newChatroomName"),
+                      ),
+                    ),
+                  );
+            },
+            controller: _textFieldController,
+            decoration: InputDecoration(hintText: "Enter yout chatroom name"),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class ChatroomCircle extends StatelessWidget {
+  final String chatroomName;
+  final String chatroomChar;
+  final Function onPressed;
+  const ChatroomCircle({
+    Key key,
+    this.chatroomName,
+    this.onPressed,
+    this.chatroomChar,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      child: Column(
+        children: [
+          ClipOval(
+            child: Material(
+              color: Colors.red, // Button color
+              child: InkWell(
+                splashColor: Colors.blue, // Splash color
+                onTap: onPressed,
+                child: SizedBox(
+                  width: 72,
+                  height: 72,
+                  child: Center(
+                    child: Text(
+                      "$chatroomChar", //"${snapshot.data[index - 1][0].toUpperCase()}",
+                      style: TextStyle(color: Colors.white, fontSize: 36),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            "$chatroomName", //"${snapshot.data[index - 1]}",
+            style: Theme.of(context).textTheme.bodyText2,
+          ),
+        ],
       ),
     );
   }

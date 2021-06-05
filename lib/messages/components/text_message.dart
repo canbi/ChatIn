@@ -24,7 +24,9 @@ class TextMessage extends StatelessWidget {
       child: Text(
         message.text,
         style: TextStyle(
-          color: message.isSender ? Colors.white : Theme.of(context).textTheme.bodyText1.color,
+          color: message.isSender
+              ? Colors.white
+              : Theme.of(context).textTheme.bodyText1.color,
         ),
       ),
     );

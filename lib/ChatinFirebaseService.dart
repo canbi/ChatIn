@@ -21,7 +21,7 @@ class ChatinFirebaseService {
   //Return newly created user id, 0 on return indicates error.
   Future<void> createUser(String name) async {
     FirebaseFirestore.instance.collection('users').doc(name).set({
-      'bio': 'Hey there! I am using ChatIn',
+      'bio': 'Hey there! I am using ChatIn', // John Doe
       'name': name,
       'sub_chats': []
     }).then((value) => null);
@@ -69,32 +69,28 @@ class ChatinFirebaseService {
     }).then((value) => newRoomId);
   }
 
-  void subscribeToRoom(String userId, String roomId) async {
+  Future<void> subscribeToRoom(String userId, String roomId) async {
     var userDoc =
         FirebaseFirestore.instance.collection('users').doc(userId.toString());
-    await userDoc.update({
-      'sub_chats': FieldValue.arrayUnion(['$roomId'])
-    });
-
     var chatDoc =
         FirebaseFirestore.instance.collection('chats').doc(roomId.toString());
-    await chatDoc.update({
-      'users': FieldValue.arrayUnion(['$userId'])
-    });
+    return userDoc.update({
+      'sub_chats': FieldValue.arrayUnion(['$roomId'])
+    }).then((value) => chatDoc.update({
+          'users': FieldValue.arrayUnion(['$userId'])
+        }).then((value) => null));
   }
 
-  void unsubscribeFromRoom(String userId, String roomId) async {
+  Future<void> unsubscribeFromRoom(String userId, String roomId) async {
     var userDoc =
         FirebaseFirestore.instance.collection('users').doc(userId.toString());
-    userDoc.update({
-      'sub_chats': FieldValue.arrayRemove(['$roomId'])
-    });
-
     var chatDoc =
         FirebaseFirestore.instance.collection('chats').doc(roomId.toString());
-    chatDoc.update({
-      'users': FieldValue.arrayRemove(['$userId'])
-    });
+    return userDoc.update({
+      'sub_chats': FieldValue.arrayRemove(['$roomId'])
+    }).then((value) => chatDoc.update({
+          'users': FieldValue.arrayRemove(['$userId'])
+        }).then((value) => null));
   }
 
   //Get data on specific user
@@ -121,9 +117,9 @@ class ChatinFirebaseService {
         .snapshots();
   }
 
-  void sendMessage(String userId, String roomId, String msg) async {
+  Future<void> sendMessage(String userId, String roomId, String msg) async {
     var chatDoc = FirebaseFirestore.instance.collection('chats').doc(roomId);
-    chatDoc.update({
+    return chatDoc.update({
       'messages': FieldValue.arrayUnion([
         {
           'uid': userId,
@@ -131,7 +127,7 @@ class ChatinFirebaseService {
           'time': DateTime.now().millisecondsSinceEpoch
         }
       ]),
-    });
+    }).then((value) => null);
   }
 
   //returns a future that will have the list of all public chatroom ids
@@ -143,10 +139,10 @@ class ChatinFirebaseService {
         .then((value) => value['chatIds']);
   }
 
-  void editUser(String userId, String name, String bio) async {
-    FirebaseFirestore.instance
+  Future<void> editUser(String userId, String name, String bio) async {
+    return FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
-        .update({'name': name, 'bio': bio});
+        .update({'name': name, 'bio': bio}).then((value) => null);
   }
 }

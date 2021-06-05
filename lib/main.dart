@@ -1,4 +1,4 @@
-import 'package:chatin/signin_page/siginScreen.dart';
+import 'package:chatin/signin_page/signinScreen.dart';
 import 'package:chatin/welcome_screen/welcomeScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: lightThemeData(context),
       darkTheme: darkThemeData(context),
-      home: SigninScreen(), //WelcomeScreen(),
+      home: WelcomeScreen(),
     );
   }
 }
