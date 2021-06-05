@@ -7,9 +7,8 @@ import 'message.dart';
 
 class Body extends StatelessWidget {
   // TODO id stuff
-  final int chatroom_id;
 
-  const Body({Key key, this.chatroom_id}) : super(key: key);
+  const Body({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +19,8 @@ class Body extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
             child: ListView.builder(
               itemCount: demeChatMessages.length,
-              itemBuilder: (context, index) => Message(message: demeChatMessages[index]),
+              itemBuilder: (context, index) =>
+                  Message(message: demeChatMessages[index]),
             ),
           ),
         ),

@@ -6,10 +6,9 @@ import 'package:chatin/constants.dart';
 import 'components/body.dart';
 
 class MessageScreen extends StatelessWidget {
-  final int chatroom_id;
   final String chatroom_name;
 
-  const MessageScreen({Key key, this.chatroom_id, this.chatroom_name}) : super(key: key);
+  const MessageScreen({Key key, this.chatroom_name}) : super(key: key);
 
   //final chatRef = FirebaseFirestore.instance.collection(collectionPath)
 
@@ -18,7 +17,7 @@ class MessageScreen extends StatelessWidget {
     return Scaffold(
       appBar: buildAppBar(),
       body: SafeArea(
-        child: Body(chatroom_id: chatroom_id),
+        child: Body(),
       ),
     );
   }
