@@ -43,14 +43,14 @@ class ChatinFirebaseService {
   }
 
   Future<String> createChatroom(String userId, String name) async {
-    CollectionReference chats = FirebaseFirestore.instance.collection('chats');
-    return _addToPublicChatrooms(userId, await chats.add({
-      'name': name,
+    var newChat = FirebaseFirestore.instance.collection('chats').doc(name);
+    return _addToPublicChatrooms(userId, await newChat.set({
+      'name': name, //deprecated
       'time': DateTime.now().millisecondsSinceEpoch,
       'uid': userId,
       'users': [userId],
       'messages': []
-    }).then((value) => value.id));
+    }).then((value) => name));
   }
 
   Future<String> _addToPublicChatrooms(String userId, String newRoomId) async {
@@ -61,28 +61,24 @@ class ChatinFirebaseService {
     }).then((value) => newRoomId);
   }
 
-  void subscribeToRoom(String userId, String roomId) async {
+  Future<void> subscribeToRoom(String userId, String roomId) async {
     var userDoc = FirebaseFirestore.instance.collection('users').doc(userId.toString());
-    await userDoc.update({
-      'sub_chats': FieldValue.arrayUnion(['$roomId'])
-    });
-
     var chatDoc = FirebaseFirestore.instance.collection('chats').doc(roomId.toString());
-    await chatDoc.update({
+    return userDoc.update({
+      'sub_chats': FieldValue.arrayUnion(['$roomId'])
+    }).then((value) => chatDoc.update({
       'users': FieldValue.arrayUnion(['$userId'])
-    });
+    }).then((value) => null));
   }
 
-  void unsubscribeFromRoom(String userId, String roomId) async {
+  Future<void> unsubscribeFromRoom(String userId, String roomId) async {
     var userDoc = FirebaseFirestore.instance.collection('users').doc(userId.toString());
-    userDoc.update({
-      'sub_chats': FieldValue.arrayRemove(['$roomId'])
-    });
-
     var chatDoc = FirebaseFirestore.instance.collection('chats').doc(roomId.toString());
-    chatDoc.update({
+    return userDoc.update({
+      'sub_chats': FieldValue.arrayRemove(['$roomId'])
+    }).then((value) => chatDoc.update({
       'users': FieldValue.arrayRemove(['$userId'])
-    });
+    }).then((value) => null));
   }
 
   //Get data on specific user
@@ -100,15 +96,15 @@ class ChatinFirebaseService {
     return FirebaseFirestore.instance.collection('chats').doc(roomId).snapshots();
   }
 
-  void sendMessage(String userId, String roomId, String msg) async {
+  Future<void> sendMessage(String userId, String roomId, String msg) async {
     var chatDoc = FirebaseFirestore.instance.collection('chats').doc(roomId);
-    chatDoc.update({
+    return chatDoc.update({
       'messages': FieldValue.arrayUnion([{
         'uid': userId,
         'content': msg,
         'time': DateTime.now().millisecondsSinceEpoch
       }]),
-    });
+    }).then((value) => null);
   }
 
   //returns a future that will have the list of all public chatroom ids
@@ -117,10 +113,10 @@ class ChatinFirebaseService {
         .then((value) => value['chatIds']);
   }
 
-  void editUser(String userId, String name, String bio) async {
-    FirebaseFirestore.instance.collection('users').doc(userId).update({
+  Future<void> editUser(String userId, String name, String bio) async {
+    return FirebaseFirestore.instance.collection('users').doc(userId).update({
       'name': name,
       'bio': bio
-    });
+    }).then((value) => null);
   }
 }
