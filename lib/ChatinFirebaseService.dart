@@ -15,7 +15,7 @@ class ChatinFirebaseService {
   //Return newly created user id, 0 on return indicates error.
   Future<void> createUser(String name) async {
     FirebaseFirestore.instance.collection('users').doc(name).set({
-      'bio': 'Hey there! I am using ChatIn', // John Doe
+      'bio': 'Hey there! I am using ChatIn',
       'name': name,
       'sub_chats': []
     }).then((value) => null);
