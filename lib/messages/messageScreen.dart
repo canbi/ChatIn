@@ -48,14 +48,18 @@ class _MessageScreenState extends State<MessageScreen> {
               mainColor: Colors.red,
               secondColor: Colors.blue,
               icon: Icons.delete_forever,
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomePage(
-                    nickname: widget.nickname,
+              onPressed: () => ChatinFirebaseService()
+                  .removeChatroom(widget.nickname, widget.chatroom_name)
+                  .then(
+                    (value) => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomePage(
+                          nickname: widget.nickname,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
             ),
             Spacer(flex: 3),
           ] else
@@ -72,6 +76,7 @@ class _MessageScreenState extends State<MessageScreen> {
                   child: Center(
                     child: Text(
                       "${widget.chatroom_name[0].toUpperCase()}",
+                      overflow: TextOverflow.fade,
                       style: TextStyle(color: Colors.white, fontSize: 24),
                     ),
                   ),

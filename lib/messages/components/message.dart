@@ -2,7 +2,6 @@ import 'package:chatin/constants.dart';
 import 'package:chatin/icons.dart';
 import 'package:chatin/models/ChatMessage.dart';
 import 'package:flutter/material.dart';
-
 import 'text_message.dart';
 
 class Message extends StatelessWidget {
@@ -17,8 +16,7 @@ class Message extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          const EdgeInsets.symmetric(horizontal: kDefaultPadding, vertical: 5),
+      padding: const EdgeInsets.symmetric(vertical: kDefaultPadding / 4),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment:

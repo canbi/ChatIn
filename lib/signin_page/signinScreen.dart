@@ -48,7 +48,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 key: _formKey,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: kDefaultPadding * 6),
+                      horizontal: kDefaultPadding * 2),
                   child: Column(
                     children: <Widget>[
                       buildNicknameField(),
@@ -166,7 +166,7 @@ class PrimaryButton extends StatelessWidget {
       ),
       padding: padding,
       color: color,
-      minWidth: MediaQuery.of(context).size.width / 3,
+      minWidth: MediaQuery.of(context).size.width / 2,
       onPressed: press,
       child: Text(
         text,
