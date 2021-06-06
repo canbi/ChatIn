@@ -2,10 +2,8 @@ import 'dart:ui';
 
 import 'package:chatin/messages/messageScreen.dart';
 import 'package:chatin/icons.dart';
-import 'package:chatin/models/ChatMessage.dart';
 import 'package:chatin/profile_page/profilePage.dart';
 import 'package:chatin/settings_page/settingsPage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../ChatinFirebaseService.dart';
@@ -50,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                       //style: TextStyle(fontWeight: FontWeight.bold, fontFeatures: ),
                       style: Theme.of(context)
                           .textTheme
-                          .headline4
+                          .headline5
                           .copyWith(fontWeight: FontWeight.bold),
                     ),
                     Spacer(flex: 10),
@@ -101,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                                 SliverGridDelegateWithMaxCrossAxisExtent(
                               maxCrossAxisExtent: 150,
                               mainAxisSpacing: 30,
-                              crossAxisSpacing: 20,
+                              crossAxisSpacing: 50,
                             ),
                             itemBuilder: (BuildContext ctx, index) {
                               if (index == 0) {
