@@ -12,3 +12,7 @@ Android APKs for release is present in directory:
 ```
 /build/app/outputs/apk/
 ```
+## User Manual
+
+![User Manual-1](https://i.imgur.com/WS0v410.png)
+![User Manual-2](https://i.imgur.com/ne6lt6H.png)
