@@ -33,29 +33,32 @@ class WelcomeScreen extends StatelessWidget {
                     builder: (context) => SigninScreen(),
                   ),
                 ),
-                child: Row(
-                  children: [
-                    Text(
-                      "Skip",
-                      style: Theme.of(context).textTheme.bodyText1.copyWith(
-                            color: Theme.of(context)
-                                .textTheme
-                                .bodyText1
-                                .color
-                                .withOpacity(0.8),
-                          ),
-                    ),
-                    SizedBox(width: kDefaultPadding / 4),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .color
-                          .withOpacity(0.8),
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(kDefaultPadding),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Skip",
+                        style: Theme.of(context).textTheme.bodyText1.copyWith(
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .color
+                                  .withOpacity(0.8),
+                            ),
+                      ),
+                      SizedBox(width: kDefaultPadding / 4),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16,
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .color
+                            .withOpacity(0.8),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

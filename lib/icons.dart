@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class ProfileIcon extends StatelessWidget {
   final Function onPressed;
   final String character;
+  final double width;
 
-  const ProfileIcon({Key key, this.onPressed, this.character})
+  const ProfileIcon({Key key, this.onPressed, this.character, this.width = 40})
       : super(key: key);
 
   @override
@@ -16,8 +17,8 @@ class ProfileIcon extends StatelessWidget {
           splashColor: Colors.blue, // Splash color
           onTap: onPressed,
           child: SizedBox(
-              width: 40,
-              height: 40,
+              width: width,
+              height: width,
               child: Center(child: Text(character.toUpperCase()))),
         ),
       ),

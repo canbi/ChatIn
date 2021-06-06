@@ -28,14 +28,20 @@ class _BodyState extends State<Body> {
               stream: ChatinFirebaseService()
                   .getChatroomStream(widget.chatroom_name),
               builder: (context, snapshot) {
-                if (snapshot.hasError || !snapshot.hasData) {
-                  return Text('Something went wrong');
+                if (snapshot.hasError ||
+                    !snapshot.hasData ||
+                    !snapshot.data.exists) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                    ),
+                  );
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                     ),
                   );
                 }
@@ -50,7 +56,6 @@ class _BodyState extends State<Body> {
                             : false),
                     user: snapshot.data["messages"][index]["uid"],
                   ),
-                  //buildItem(context, snapshot.data.documents[index]),
                 );
               },
             ),

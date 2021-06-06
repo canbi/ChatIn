@@ -53,31 +53,20 @@ class _HomePageState extends State<HomePage> {
                           .copyWith(fontWeight: FontWeight.bold),
                     ),
                     Spacer(flex: 2),
-                    MaterialButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(40)),
-                      ),
-                      //padding: EdgeInsets.all(20),
-                      color: Colors.lightGreen,
-                      minWidth: MediaQuery.of(context).size.width / 4,
-                      onPressed: () {
-                        setState(() {
-                          isPublic = !isPublic;
-                        });
-                      },
-                      child: Text(
-                        isPublic ? "Publis CRs" : "Subsribed CRs",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    Spacer(flex: 2),
                     ProfileIcon(
-                      character: widget.nickname[0],
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ProfilePage()),
-                      ),
-                    ),
+                        character: widget.nickname[0],
+                        onPressed: () => ChatinFirebaseService()
+                            .getUserById(widget.nickname)
+                            .then(
+                              (value) => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProfilePage(
+                                          bio: value.data()["bio"],
+                                          nickname: widget.nickname,
+                                        )),
+                              ),
+                            )),
                     //SizedBox(width: 10),
                     Spacer(flex: 1),
                     SettingsIcon(
@@ -145,7 +134,11 @@ class _HomePageState extends State<HomePage> {
                     } else if (snapshot.hasError) {
                       return Text("Error");
                     }
-                    return Text("Loading...");
+                    return Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                      ),
+                    );
                   },
                 ),
               ],
@@ -170,6 +163,7 @@ class _HomePageState extends State<HomePage> {
                         newChatroomName = value;
                       }))
                   .then((value) => Navigator.pop(context))
+                  .then((value) => _textFieldController.clear())
                   .then(
                     (value) => Navigator.push(
                       context,
@@ -183,7 +177,7 @@ class _HomePageState extends State<HomePage> {
                   );
             },
             controller: _textFieldController,
-            decoration: InputDecoration(hintText: "Enter yout chatroom name"),
+            decoration: InputDecoration(hintText: "Enter your chatroom name"),
           ),
         );
       },

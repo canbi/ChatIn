@@ -1,4 +1,5 @@
 import 'package:chatin/ChatinFirebaseService.dart';
+import 'package:chatin/home_page/homePage.dart';
 import 'package:flutter/material.dart';
 import 'components/body.dart';
 
@@ -48,7 +49,16 @@ class _MessageScreenState extends State<MessageScreen> {
                 child: InkWell(
                   onTap: () => ChatinFirebaseService()
                       .removeChatroom(widget.nickname, widget.chatroom_name)
-                      .then((value) => Navigator.pop(context)),
+                      .then(
+                        (value) => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomePage(
+                              nickname: widget.nickname,
+                            ),
+                          ),
+                        ),
+                      ),
                   splashColor: Colors.blue, // Splash color
                   child: SizedBox(
                     width: 40,
@@ -65,7 +75,7 @@ class _MessageScreenState extends State<MessageScreen> {
             ),
             Spacer(flex: 3),
           ] else
-            Spacer(flex: 5),
+            Spacer(flex: 10),
           ClipOval(
             child: Material(
               color: Colors.blue, // Button color

@@ -33,7 +33,7 @@ class _SigninScreenState extends State<SigninScreen> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+          padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding * 2),
           child: Column(
             children: [
               Spacer(),
@@ -41,61 +41,65 @@ class _SigninScreenState extends State<SigninScreen> {
                 MediaQuery.of(context).platformBrightness == Brightness.light
                     ? "assets/images/Logo_light.png"
                     : "assets/images/Logo_dark.png",
-                height: 146,
+                //width: MediaQuery.of(context).size.width / 2,
               ),
               Spacer(),
               Form(
                 key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    buildNicknameField(),
-                    SizedBox(height: 5),
-                    FormError(errors: errors),
-                    SizedBox(height: 25),
-                    PrimaryButton(
-                      text: "Sign In",
-                      press: () {
-                        if (_formKey.currentState.validate()) {
-                          _formKey.currentState.save();
-                          KeyboardUtil.hideKeyboard(context);
-                          ChatinFirebaseService()
-                              .checkIfUserExists(nickname)
-                              .then((result) => result
-                                  ? Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            HomePage(nickname: nickname),
-                                      ),
-                                    )
-                                  : addError(error: knoNickError));
-                        }
-                      },
-                    ),
-                    SizedBox(height: 25),
-                    PrimaryButton(
-                      text: "Sign Up",
-                      press: () {
-                        if (_formKey.currentState.validate()) {
-                          _formKey.currentState.save();
-                          KeyboardUtil.hideKeyboard(context);
-                          ChatinFirebaseService()
-                              .checkIfUserExists(nickname)
-                              .then((result) => result
-                                  ? addError(error: kAlreadyNickError)
-                                  : ChatinFirebaseService()
-                                      .createUser(nickname)
-                                      .then((result) => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  HomePage(nickname: nickname),
-                                            ),
-                                          )));
-                        }
-                      },
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: kDefaultPadding * 6),
+                  child: Column(
+                    children: <Widget>[
+                      buildNicknameField(),
+                      SizedBox(height: 5),
+                      FormError(errors: errors),
+                      SizedBox(height: 25),
+                      PrimaryButton(
+                        text: "Sign In",
+                        press: () {
+                          if (_formKey.currentState.validate()) {
+                            _formKey.currentState.save();
+                            KeyboardUtil.hideKeyboard(context);
+                            ChatinFirebaseService()
+                                .checkIfUserExists(nickname)
+                                .then((result) => result
+                                    ? Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              HomePage(nickname: nickname),
+                                        ),
+                                      )
+                                    : addError(error: knoNickError));
+                          }
+                        },
+                      ),
+                      SizedBox(height: 25),
+                      PrimaryButton(
+                        text: "Sign Up",
+                        press: () {
+                          if (_formKey.currentState.validate()) {
+                            _formKey.currentState.save();
+                            KeyboardUtil.hideKeyboard(context);
+                            ChatinFirebaseService()
+                                .checkIfUserExists(nickname)
+                                .then((result) => result
+                                    ? addError(error: kAlreadyNickError)
+                                    : ChatinFirebaseService()
+                                        .createUser(nickname)
+                                        .then((result) => Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => HomePage(
+                                                    nickname: nickname),
+                                              ),
+                                            )));
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Spacer(),
@@ -158,7 +162,7 @@ class PrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(40)),
+        borderRadius: BorderRadius.all(Radius.circular(30)),
       ),
       padding: padding,
       color: color,
@@ -166,7 +170,7 @@ class PrimaryButton extends StatelessWidget {
       onPressed: press,
       child: Text(
         text,
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(color: Colors.white, fontSize: 16),
       ),
     );
   }

@@ -20,7 +20,8 @@ class Message extends StatelessWidget {
       padding: const EdgeInsets.only(top: kDefaultPadding),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment:
+            message.isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           ProfileIcon(character: user[0].toUpperCase(), onPressed: () {}),
           SizedBox(width: kDefaultPadding / 2),
