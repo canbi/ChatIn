@@ -26,20 +26,25 @@ class ProfileIcon extends StatelessWidget {
   }
 }
 
-class SettingsIcon extends StatelessWidget {
+class IconButtons extends StatelessWidget {
   final Function onPressed;
+  final IconData icon;
+  final Color mainColor;
+  final Color secondColor;
 
-  const SettingsIcon({Key key, this.onPressed}) : super(key: key);
+  const IconButtons(
+      {Key key, this.onPressed, this.icon, this.mainColor, this.secondColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ClipOval(
       child: Material(
-        color: Colors.blue, // Button color
+        color: mainColor, // Button color
         child: InkWell(
-          splashColor: Colors.red, // Splash color
+          splashColor: secondColor, // Splash color
           onTap: onPressed,
-          child: SizedBox(width: 40, height: 40, child: Icon(Icons.settings)),
+          child: SizedBox(width: 40, height: 40, child: Icon(icon)),
         ),
       ),
     );

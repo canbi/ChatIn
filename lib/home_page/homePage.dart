@@ -20,14 +20,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool isPublic;
+  bool refresh;
   final _textFieldController = TextEditingController();
   String newChatroomName;
   bool isOwner;
   @override
   void initState() {
     super.initState();
-    isPublic = true;
+    refresh = true;
   }
 
   @override
@@ -53,7 +53,25 @@ class _HomePageState extends State<HomePage> {
                           .headline4
                           .copyWith(fontWeight: FontWeight.bold),
                     ),
-                    Spacer(flex: 2),
+                    Spacer(flex: 10),
+                    IconButtons(
+                        mainColor: Colors.green,
+                        secondColor: Colors.black,
+                        icon: Icons.refresh,
+                        onPressed: () => setState(() {
+                              refresh = !refresh;
+                            })),
+                    Spacer(flex: 1),
+                    IconButtons(
+                      mainColor: Colors.blue,
+                      secondColor: Colors.red,
+                      icon: Icons.settings,
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SettingsPage()),
+                      ),
+                    ),
+                    Spacer(flex: 1),
                     ProfileIcon(
                         character: widget.nickname[0],
                         onPressed: () => ChatinFirebaseService()
@@ -68,14 +86,6 @@ class _HomePageState extends State<HomePage> {
                                         )),
                               ),
                             )),
-                    //SizedBox(width: 10),
-                    Spacer(flex: 1),
-                    SettingsIcon(
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SettingsPage()),
-                      ),
-                    ),
                   ],
                 ),
                 SizedBox(height: 40),
@@ -96,13 +106,17 @@ class _HomePageState extends State<HomePage> {
                             itemBuilder: (BuildContext ctx, index) {
                               if (index == 0) {
                                 return ChatroomCircle(
+                                  mainColor: Colors.blue,
+                                  secondColor: Colors.red,
                                   chatroomChar: "+",
-                                  chatroomName: "Create Chatroom Boi",
+                                  chatroomName: "Create Chatroom!",
                                   onPressed: () =>
                                       _displayTextInputDialog(context),
                                 );
                               } else {
                                 return ChatroomCircle(
+                                    mainColor: Colors.red,
+                                    secondColor: Colors.blue,
                                     chatroomChar:
                                         "${snapshot.data[index - 1][0].toUpperCase()}",
                                     chatroomName: "${snapshot.data[index - 1]}",
@@ -194,11 +208,16 @@ class ChatroomCircle extends StatelessWidget {
   final String chatroomName;
   final String chatroomChar;
   final Function onPressed;
+  final Color mainColor;
+  final Color secondColor;
+
   const ChatroomCircle({
     Key key,
     this.chatroomName,
     this.onPressed,
     this.chatroomChar,
+    this.mainColor,
+    this.secondColor,
   }) : super(key: key);
 
   @override
@@ -209,9 +228,9 @@ class ChatroomCircle extends StatelessWidget {
         children: [
           ClipOval(
             child: Material(
-              color: Colors.red, // Button color
+              color: mainColor, // Button color
               child: InkWell(
-                splashColor: Colors.blue, // Splash color
+                splashColor: secondColor, // Splash color
                 onTap: onPressed,
                 child: SizedBox(
                   width: 72,

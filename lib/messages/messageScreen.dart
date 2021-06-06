@@ -1,5 +1,6 @@
 import 'package:chatin/ChatinFirebaseService.dart';
 import 'package:chatin/home_page/homePage.dart';
+import 'package:chatin/icons.dart';
 import 'package:flutter/material.dart';
 import 'components/body.dart';
 
@@ -43,32 +44,15 @@ class _MessageScreenState extends State<MessageScreen> {
           ),
           if (widget.isOwner) ...[
             Spacer(flex: 6),
-            ClipOval(
-              child: Material(
-                color: Colors.red, // Button color
-                child: InkWell(
-                  onTap: () => ChatinFirebaseService()
-                      .removeChatroom(widget.nickname, widget.chatroom_name)
-                      .then(
-                        (value) => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomePage(
-                              nickname: widget.nickname,
-                            ),
-                          ),
-                        ),
-                      ),
-                  splashColor: Colors.blue, // Splash color
-                  child: SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: Center(
-                      child: Text(
-                        "X",
-                        style: TextStyle(color: Colors.white, fontSize: 24),
-                      ),
-                    ),
+            IconButtons(
+              mainColor: Colors.red,
+              secondColor: Colors.blue,
+              icon: Icons.delete_forever,
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomePage(
+                    nickname: widget.nickname,
                   ),
                 ),
               ),
