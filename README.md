@@ -8,7 +8,7 @@ ChatIn is available to use and is currently hosten on [canbi.github.io/ChatIn](h
 You can send and read messages on public chatrooms. You can also create users but without a password so you can just pick a name and start chatting with it! Authentication using OAuth 2.0 will be added on future releases.
 
 ## Android APK
-Android APKs for release and debug are present in directory:
+Android APKs for release is present in directory:
 ```
 /build/app/outputs/apk/
 ```
