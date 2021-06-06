@@ -1,16 +1,14 @@
-# chatin
+# ChatIn
+ChatIn is an instant messaging application for Android and web, written using Flutter.
 
-A new Flutter project.
+## ChatIn is in production on web!
+ChatIn is available to use and is currently hosten on [canbi.github.io/ChatIn](https://canbi.github.io/ChatIn/)
 
-## Getting Started
+## Features and limitations
+You can send and read messages on public chatrooms. You can also create users but without a password so you can just pick a name and start chatting with it! Authentication using OAuth 2.0 will be added on future releases.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Android APK
+Android APKs for release and debug are present in directory:
+```
+/build/app/outputs/apk/
+```
