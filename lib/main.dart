@@ -1,4 +1,3 @@
-import 'package:chatin/signin_page/signinScreen.dart';
 import 'package:chatin/welcome_screen/welcomeScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

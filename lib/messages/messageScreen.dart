@@ -1,11 +1,14 @@
+import 'package:chatin/ChatinFirebaseService.dart';
 import 'package:flutter/material.dart';
 import 'components/body.dart';
 
 class MessageScreen extends StatefulWidget {
   final String chatroom_name;
   final String nickname;
+  final bool isOwner;
 
-  const MessageScreen({Key key, this.chatroom_name, this.nickname})
+  const MessageScreen(
+      {Key key, this.chatroom_name, this.nickname, this.isOwner})
       : super(key: key);
 
   @override
@@ -30,35 +33,39 @@ class _MessageScreenState extends State<MessageScreen> {
     return AppBar(
       automaticallyImplyLeading: false,
       title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
+        children: <Widget>[
           BackButton(),
+          Spacer(flex: 10),
           Text(
             "${widget.chatroom_name}",
             style: TextStyle(fontSize: 24),
           ),
-
-          //getchatroom yapılıp uid alınacak
-          //nickname ile aynıysa gösterilecek
-          /*ClipOval(
-            child: Material(
-              color: Colors.red, // Button color
-              child: InkWell(
-                onTap: () {},
-                splashColor: Colors.blue, // Splash color
-                child: SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: Center(
-                    child: Text(
-                      "X",
-                      style: TextStyle(color: Colors.white, fontSize: 24),
+          if (widget.isOwner) ...[
+            Spacer(flex: 6),
+            ClipOval(
+              child: Material(
+                color: Colors.red, // Button color
+                child: InkWell(
+                  onTap: () => ChatinFirebaseService()
+                      .removeChatroom(widget.nickname, widget.chatroom_name)
+                      .then((value) => Navigator.pop(context)),
+                  splashColor: Colors.blue, // Splash color
+                  child: SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: Center(
+                      child: Text(
+                        "X",
+                        style: TextStyle(color: Colors.white, fontSize: 24),
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),*/
+            Spacer(flex: 3),
+          ] else
+            Spacer(flex: 5),
           ClipOval(
             child: Material(
               color: Colors.blue, // Button color

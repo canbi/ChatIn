@@ -22,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   bool isPublic;
   final _textFieldController = TextEditingController();
   String newChatroomName;
+  bool isOwner;
   @override
   void initState() {
     super.initState();
@@ -48,7 +49,7 @@ class _HomePageState extends State<HomePage> {
                       //style: TextStyle(fontWeight: FontWeight.bold, fontFeatures: ),
                       style: Theme.of(context)
                           .textTheme
-                          .headline3
+                          .headline4
                           .copyWith(fontWeight: FontWeight.bold),
                     ),
                     Spacer(flex: 2),
@@ -112,20 +113,30 @@ class _HomePageState extends State<HomePage> {
                                 );
                               } else {
                                 return ChatroomCircle(
-                                  chatroomChar:
-                                      "${snapshot.data[index - 1][0].toUpperCase()}",
-                                  chatroomName: "${snapshot.data[index - 1]}",
-                                  onPressed: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => MessageScreen(
-                                        nickname: widget.nickname,
-                                        chatroom_name: //snapshot
-                                            "${snapshot.data[index - 1]}",
-                                      ),
-                                    ),
-                                  ),
-                                );
+                                    chatroomChar:
+                                        "${snapshot.data[index - 1][0].toUpperCase()}",
+                                    chatroomName: "${snapshot.data[index - 1]}",
+                                    onPressed: () => ChatinFirebaseService()
+                                        .getChatroom(
+                                            "${snapshot.data[index - 1]}")
+                                        .then((value) => setState(() {
+                                              isOwner = value.data()["uid"] ==
+                                                  widget.nickname;
+                                            }))
+                                        .then(
+                                          (value) => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MessageScreen(
+                                                isOwner: isOwner,
+                                                nickname: widget.nickname,
+                                                chatroom_name:
+                                                    "${snapshot.data[index - 1]}",
+                                              ),
+                                            ),
+                                          ),
+                                        ));
                               }
                             },
                           ),
@@ -164,6 +175,7 @@ class _HomePageState extends State<HomePage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => MessageScreen(
+                            isOwner: true,
                             nickname: widget.nickname,
                             chatroom_name: "$newChatroomName"),
                       ),
@@ -221,57 +233,6 @@ class ChatroomCircle extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyText2,
           ),
         ],
-      ),
-    );
-  }
-}
-
-class ChatroomList extends StatelessWidget {
-  final List<Map> chatRooms;
-  const ChatroomList({
-    Key key,
-    this.chatRooms,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    print("chatroomlist");
-    return Expanded(
-      child: SizedBox(
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 150,
-            mainAxisSpacing: 30,
-            crossAxisSpacing: 20,
-          ),
-          itemCount: chatRooms.length,
-          itemBuilder: (BuildContext ctx, index) {
-            return Container(
-              alignment: Alignment.center,
-              child: Column(
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MessageScreen(
-                          chatroom_name: chatRooms[index]["name"],
-                        ),
-                      ),
-                    ),
-                    child: CircleAvatar(
-                        backgroundColor: Colors.redAccent, minRadius: 42),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    chatRooms[index]["name"],
-                    style: Theme.of(context).textTheme.bodyText2,
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
       ),
     );
   }

@@ -64,7 +64,6 @@ class _SigninScreenState extends State<SigninScreen> {
                                   ? Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        //TODO nickname will be passed
                                         builder: (context) =>
                                             HomePage(nickname: nickname),
                                       ),

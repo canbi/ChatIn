@@ -33,7 +33,8 @@ class _ProfilePageState extends State<ProfilePage> {
               Container(
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: NetworkImage("assets/images/a.jpg"),
+                        image: NetworkImage(
+                            "assets/images/profile-background.jpg"),
                         fit: BoxFit.cover)),
                 child: Container(
                   width: double.infinity,
@@ -51,13 +52,15 @@ class _ProfilePageState extends State<ProfilePage> {
               SizedBox(
                 height: 60,
               ),
-              Text(
-                "Mahfuz Ejder",
-                style: TextStyle(
-                    fontSize: 25.0,
-                    color: Colors.white,
-                    letterSpacing: 2.0,
-                    fontWeight: FontWeight.w400),
+              Flexible(
+                child: Text(
+                  "Mahfuz Ejder",
+                  style: TextStyle(
+                      fontSize: 25.0,
+                      color: Colors.white,
+                      letterSpacing: 2.0,
+                      fontWeight: FontWeight.w400),
+                ),
               ),
               Card(
                   margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),

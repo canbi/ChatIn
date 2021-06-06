@@ -28,7 +28,7 @@ class _BodyState extends State<Body> {
               stream: ChatinFirebaseService()
                   .getChatroomStream(widget.chatroom_name),
               builder: (context, snapshot) {
-                if (snapshot.hasError) {
+                if (snapshot.hasError || !snapshot.hasData) {
                   return Text('Something went wrong');
                 }
 
@@ -39,7 +39,6 @@ class _BodyState extends State<Body> {
                     ),
                   );
                 }
-
                 return ListView.builder(
                   itemCount: snapshot.data["messages"].length,
                   itemBuilder: (context, index) => Message(

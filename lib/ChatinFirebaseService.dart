@@ -88,9 +88,12 @@ class ChatinFirebaseService {
         FirebaseFirestore.instance.collection('chats').doc(roomId.toString());
     return userDoc.update({
       'sub_chats': FieldValue.arrayRemove(['$roomId'])
-    }).then((value) => chatDoc.update({
+    }).then((value) => null);
+
+    // ! impossible to reach deleted chatroom
+    /*then((value) => chatDoc.update({
           'users': FieldValue.arrayRemove(['$userId'])
-        }).then((value) => null));
+        })*/
   }
 
   //Get data on specific user
