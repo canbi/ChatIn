@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:chatin/messages/messageScreen.dart';
 import 'package:chatin/icons.dart';
+import 'package:chatin/models/ChatMessage.dart';
 import 'package:chatin/profile_page/profilePage.dart';
 import 'package:chatin/settings_page/settingsPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,14 +20,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool isPublic;
+  bool refresh;
   final _textFieldController = TextEditingController();
   String newChatroomName;
   bool isOwner;
   @override
   void initState() {
     super.initState();
-    isPublic = true;
+    refresh = true;
   }
 
   @override
@@ -52,40 +53,39 @@ class _HomePageState extends State<HomePage> {
                           .headline4
                           .copyWith(fontWeight: FontWeight.bold),
                     ),
-                    Spacer(flex: 2),
-                    MaterialButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(40)),
-                      ),
-                      //padding: EdgeInsets.all(20),
-                      color: Colors.lightGreen,
-                      minWidth: MediaQuery.of(context).size.width / 4,
-                      onPressed: () {
-                        setState(() {
-                          isPublic = !isPublic;
-                        });
-                      },
-                      child: Text(
-                        isPublic ? "Publis CRs" : "Subsribed CRs",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    Spacer(flex: 2),
-                    ProfileIcon(
-                      character: widget.nickname[0],
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ProfilePage()),
-                      ),
-                    ),
-                    //SizedBox(width: 10),
+                    Spacer(flex: 10),
+                    IconButtons(
+                        mainColor: Colors.green,
+                        secondColor: Colors.black,
+                        icon: Icons.refresh,
+                        onPressed: () => setState(() {
+                              refresh = !refresh;
+                            })),
                     Spacer(flex: 1),
-                    SettingsIcon(
+                    IconButtons(
+                      mainColor: Colors.blue,
+                      secondColor: Colors.red,
+                      icon: Icons.settings,
                       onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => SettingsPage()),
                       ),
                     ),
+                    Spacer(flex: 1),
+                    ProfileIcon(
+                        character: widget.nickname[0],
+                        onPressed: () => ChatinFirebaseService()
+                            .getUserById(widget.nickname)
+                            .then(
+                              (value) => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProfilePage(
+                                          bio: value.data()["bio"],
+                                          nickname: widget.nickname,
+                                        )),
+                              ),
+                            )),
                   ],
                 ),
                 SizedBox(height: 40),
@@ -106,13 +106,17 @@ class _HomePageState extends State<HomePage> {
                             itemBuilder: (BuildContext ctx, index) {
                               if (index == 0) {
                                 return ChatroomCircle(
+                                  mainColor: Colors.blue,
+                                  secondColor: Colors.red,
                                   chatroomChar: "+",
-                                  chatroomName: "Create Chatroom Boi",
+                                  chatroomName: "Create Chatroom!",
                                   onPressed: () =>
                                       _displayTextInputDialog(context),
                                 );
                               } else {
                                 return ChatroomCircle(
+                                    mainColor: Colors.red,
+                                    secondColor: Colors.blue,
                                     chatroomChar:
                                         "${snapshot.data[index - 1][0].toUpperCase()}",
                                     chatroomName: "${snapshot.data[index - 1]}",
@@ -145,7 +149,11 @@ class _HomePageState extends State<HomePage> {
                     } else if (snapshot.hasError) {
                       return Text("Error");
                     }
-                    return Text("Loading...");
+                    return Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                      ),
+                    );
                   },
                 ),
               ],
@@ -165,25 +173,30 @@ class _HomePageState extends State<HomePage> {
           content: TextField(
             onSubmitted: (value) {
               ChatinFirebaseService()
-                  .createChatroom(widget.nickname, value)
-                  .then((value) => setState(() {
-                        newChatroomName = value;
-                      }))
-                  .then((value) => Navigator.pop(context))
-                  .then(
-                    (value) => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MessageScreen(
-                            isOwner: true,
-                            nickname: widget.nickname,
-                            chatroom_name: "$newChatroomName"),
-                      ),
-                    ),
-                  );
+                  .checkIfRoomExists(value)
+                  .then((isExist) => isExist
+                      ? Navigator.pop(context)
+                      : ChatinFirebaseService()
+                          .createChatroom(widget.nickname, value)
+                          .then((value) => setState(() {
+                                newChatroomName = value;
+                              }))
+                          .then((value) => Navigator.pop(context))
+                          .then((value) => _textFieldController.clear())
+                          .then(
+                            (value) => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MessageScreen(
+                                    isOwner: true,
+                                    nickname: widget.nickname,
+                                    chatroom_name: "$newChatroomName"),
+                              ),
+                            ),
+                          ));
             },
             controller: _textFieldController,
-            decoration: InputDecoration(hintText: "Enter yout chatroom name"),
+            decoration: InputDecoration(hintText: "Enter your chatroom name"),
           ),
         );
       },
@@ -195,11 +208,16 @@ class ChatroomCircle extends StatelessWidget {
   final String chatroomName;
   final String chatroomChar;
   final Function onPressed;
+  final Color mainColor;
+  final Color secondColor;
+
   const ChatroomCircle({
     Key key,
     this.chatroomName,
     this.onPressed,
     this.chatroomChar,
+    this.mainColor,
+    this.secondColor,
   }) : super(key: key);
 
   @override
@@ -210,9 +228,9 @@ class ChatroomCircle extends StatelessWidget {
         children: [
           ClipOval(
             child: Material(
-              color: Colors.red, // Button color
+              color: mainColor, // Button color
               child: InkWell(
-                splashColor: Colors.blue, // Splash color
+                splashColor: secondColor, // Splash color
                 onTap: onPressed,
                 child: SizedBox(
                   width: 72,

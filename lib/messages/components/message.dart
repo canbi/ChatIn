@@ -17,18 +17,24 @@ class Message extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: kDefaultPadding),
+      padding:
+          const EdgeInsets.symmetric(horizontal: kDefaultPadding, vertical: 5),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment:
+            message.isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
-          ProfileIcon(character: user[0].toUpperCase(), onPressed: () {}),
-          SizedBox(width: kDefaultPadding / 2),
+          if (!message.isSender) ...[
+            ProfileIcon(character: user[0].toUpperCase(), onPressed: () {}),
+            SizedBox(width: kDefaultPadding / 2),
+          ],
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("${user.toLowerCase()}",
-                  style: TextStyle(color: Colors.white)),
+              if (!message.isSender) ...[
+                Text(" ${user.toLowerCase()}",
+                    style: TextStyle(color: Colors.white)),
+              ],
               SizedBox(height: 3),
               TextMessage(message: message),
             ],

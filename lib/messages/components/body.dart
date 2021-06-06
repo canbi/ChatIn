@@ -17,6 +17,7 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   final _textController = TextEditingController();
+  ScrollController controller = ScrollController();
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -28,35 +29,46 @@ class _BodyState extends State<Body> {
               stream: ChatinFirebaseService()
                   .getChatroomStream(widget.chatroom_name),
               builder: (context, snapshot) {
-                if (snapshot.hasError || !snapshot.hasData) {
-                  return Text('Something went wrong');
+                if (snapshot.hasError ||
+                    !snapshot.hasData ||
+                    !snapshot.data.exists) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                    ),
+                  );
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                     ),
                   );
                 }
+                int length = snapshot.data["messages"].length;
+
                 return ListView.builder(
-                  itemCount: snapshot.data["messages"].length,
+                  reverse: true,
+                  controller: controller,
+                  physics: BouncingScrollPhysics(),
+                  itemCount: length,
                   itemBuilder: (context, index) => Message(
                     message: ChatMessage(
-                        text: snapshot.data["messages"][index]["content"],
-                        isSender: snapshot.data["messages"][index]["uid"] ==
+                        text: snapshot.data["messages"][length - index - 1]
+                            ["content"],
+                        isSender: snapshot.data["messages"][length - index - 1]
+                                    ["uid"] ==
                                 widget.nickname
                             ? true
                             : false),
-                    user: snapshot.data["messages"][index]["uid"],
+                    user: snapshot.data["messages"][length - index - 1]["uid"],
                   ),
-                  //buildItem(context, snapshot.data.documents[index]),
                 );
               },
             ),
           ),
         ),
-        //textfield
         Container(
           padding: EdgeInsets.symmetric(
             horizontal: kDefaultPadding,
@@ -116,7 +128,7 @@ class _BodyState extends State<Body> {
               ],
             ),
           ),
-        ),
+        )
       ],
     );
   }
