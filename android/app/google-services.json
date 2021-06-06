@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "485555494765",
+    "firebase_url": "https://chatin-86d1d-default-rtdb.firebaseio.com",
+    "project_id": "chatin-86d1d",
+    "storage_bucket": "chatin-86d1d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:485555494765:android:336998b0c1a3bcf05b0464",
+        "android_client_info": {
+          "package_name": "com.yigitsezer.chatin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "485555494765-b8fb62e4nhobokcv6bq8qg6n40qmeeef.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBghx3QHKqdL1HVP-_RQ4jrNnC1vNE62Y4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "485555494765-b8fb62e4nhobokcv6bq8qg6n40qmeeef.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
