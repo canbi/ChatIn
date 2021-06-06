@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:chatin/messages/messageScreen.dart';
 import 'package:chatin/icons.dart';
+import 'package:chatin/models/ChatMessage.dart';
 import 'package:chatin/profile_page/profilePage.dart';
 import 'package:chatin/settings_page/settingsPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -158,23 +159,27 @@ class _HomePageState extends State<HomePage> {
           content: TextField(
             onSubmitted: (value) {
               ChatinFirebaseService()
-                  .createChatroom(widget.nickname, value)
-                  .then((value) => setState(() {
-                        newChatroomName = value;
-                      }))
-                  .then((value) => Navigator.pop(context))
-                  .then((value) => _textFieldController.clear())
-                  .then(
-                    (value) => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MessageScreen(
-                            isOwner: true,
-                            nickname: widget.nickname,
-                            chatroom_name: "$newChatroomName"),
-                      ),
-                    ),
-                  );
+                  .checkIfRoomExists(value)
+                  .then((isExist) => isExist
+                      ? Navigator.pop(context)
+                      : ChatinFirebaseService()
+                          .createChatroom(widget.nickname, value)
+                          .then((value) => setState(() {
+                                newChatroomName = value;
+                              }))
+                          .then((value) => Navigator.pop(context))
+                          .then((value) => _textFieldController.clear())
+                          .then(
+                            (value) => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MessageScreen(
+                                    isOwner: true,
+                                    nickname: widget.nickname,
+                                    chatroom_name: "$newChatroomName"),
+                              ),
+                            ),
+                          ));
             },
             controller: _textFieldController,
             decoration: InputDecoration(hintText: "Enter your chatroom name"),

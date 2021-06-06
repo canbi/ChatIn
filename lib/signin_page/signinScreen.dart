@@ -41,7 +41,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 MediaQuery.of(context).platformBrightness == Brightness.light
                     ? "assets/images/Logo_light.png"
                     : "assets/images/Logo_dark.png",
-                //width: MediaQuery.of(context).size.width / 2,
+                height: MediaQuery.of(context).size.height / 3,
               ),
               Spacer(),
               Form(
@@ -56,7 +56,7 @@ class _SigninScreenState extends State<SigninScreen> {
                       FormError(errors: errors),
                       SizedBox(height: 25),
                       PrimaryButton(
-                        text: "Sign In",
+                        text: "Login",
                         press: () {
                           if (_formKey.currentState.validate()) {
                             _formKey.currentState.save();

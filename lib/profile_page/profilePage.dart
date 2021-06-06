@@ -18,6 +18,12 @@ class _ProfilePageState extends State<ProfilePage> {
   String about;
 
   @override
+  void initState() {
+    super.initState();
+    about = widget.bio;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -94,7 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 15,
               ),
               Text(
-                "${widget.bio}",
+                "$about",
                 style: TextStyle(
                     fontSize: 18.0,
                     color: Colors.white,
@@ -120,14 +126,16 @@ class _ProfilePageState extends State<ProfilePage> {
                         about = value;
                       }))
                   .then(
-                    (value) => Navigator.push(
+                    (value) => Navigator.pop(context),
+
+                    /*Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ProfilePage(
                                 bio: about,
                                 nickname: widget.nickname,
                               )),
-                    ),
+                    ),*/
                   )
                   .then((value) => _textFieldController.clear());
             },
