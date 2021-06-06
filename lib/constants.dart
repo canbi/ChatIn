@@ -8,3 +8,8 @@ const kWarninngColor = Color(0xFFF3BB1C);
 const kErrorColor = Color(0xFFF03738);
 
 const kDefaultPadding = 20.0;
+
+const String kNickNullError = "Please Enter your nickname";
+const String kShortNickError = "Nickname is too short";
+const String kAlreadyNickError = "Nickname is already taken";
+const String knoNickError = "Nickname is not found";
